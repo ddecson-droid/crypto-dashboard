@@ -1,8 +1,8 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/coingecko/:path*",
-      "destination": "https://api.coingecko.com/api/v3/:path*"
+  "functions": {
+    "api/coingecko/[...path].js": {
+      "memory": 256,
+      "maxDuration": 10
     }
-  ]
+  }
 }
