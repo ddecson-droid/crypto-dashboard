@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import type { Coin } from "../types/coin";
 
 const API_URL =
-  "/api/coingecko/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false";
+  "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false";
 
 export function useCoins(): {
   coins: Coin[];

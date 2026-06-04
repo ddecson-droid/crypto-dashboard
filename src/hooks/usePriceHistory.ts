@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import type { PricePoint } from "../types/coin";
 
-const BASE_URL = "/api/coingecko/coins";
+const BASE_URL = "https://api.coingecko.com/api/v3/coins";
 
 export function usePriceHistory(
   coinId: string | null
