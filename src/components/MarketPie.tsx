@@ -67,6 +67,17 @@ export default function MarketPie({ coins, loading, error }: Props) {
       itemWidth: 10,
       itemHeight: 10,
     },
+    graphic: {
+      type: "text",
+      left: "center",
+      top: "center",
+      style: {
+        text: "Market Cap",
+        fill: "#9ca3af",
+        fontSize: 14,
+        fontWeight: "bold",
+      },
+    },
     series: [
       {
         type: "pie",
