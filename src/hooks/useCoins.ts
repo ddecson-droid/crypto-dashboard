@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { Coin } from "../types/coin";
 
 const API_URL =
@@ -8,10 +8,16 @@ export function useCoins(): {
   coins: Coin[];
   loading: boolean;
   error: string | null;
+  refetch: () => void;
 } {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [trigger, setTrigger] = useState(0);
+
+  const refetch = useCallback(() => {
+    setTrigger((t) => t + 1);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,7 +42,7 @@ export function useCoins(): {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [trigger]);
 
-  return { coins, loading, error };
+  return { coins, loading, error, refetch };
 }
