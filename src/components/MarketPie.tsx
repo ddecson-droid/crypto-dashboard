@@ -1,17 +1,12 @@
 import ReactECharts from "echarts-for-react";
 import type { Coin } from "../types/coin";
 
-// ====== 市值分布环形饼图 ======
-// 接收全部 TOP 20 数据 → 前 10 名各有颜色切片 → 后 10 名合并成一个灰色 "Others"
-// 不依赖选中态——永远显示完整分布
-
 interface Props {
-  coins: Coin[]; // 来自 useCoins 的 20 个币种
+  coins: Coin[];
   loading: boolean;
   error: string | null;
 }
 
-// 固定 20 色色板：保证同一种币每次渲染颜色不变
 const COLORS = [
   "#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#8b5cf6",
   "#06b6d4", "#ec4899", "#14b8a6", "#f97316", "#6366f1",
@@ -20,7 +15,6 @@ const COLORS = [
 ];
 
 export default function MarketPie({ coins, loading, error }: Props) {
-  // ——— 状态 1：加载中 ———
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-900 rounded-xl border border-gray-800 text-gray-400">
@@ -29,7 +23,6 @@ export default function MarketPie({ coins, loading, error }: Props) {
     );
   }
 
-  // ——— 状态 2：出错了 ———
   if (error) {
     return (
       <div className="flex items-center justify-center h-64 bg-gray-900 rounded-xl border border-gray-800 text-red-400">
@@ -38,42 +31,34 @@ export default function MarketPie({ coins, loading, error }: Props) {
     );
   }
 
-  // ——— 状态 3：构建饼图数据 ———
-  // 只显示前 10 名，避免饼图碎成渣
   const top10 = coins.slice(0, 10);
-  // 后 10 名的市值全部累加起来
   const otherMarketCap = coins
     .slice(10)
     .reduce((sum, coin) => sum + coin.market_cap, 0);
 
-  // 前 10 名各一个切片，分配固定颜色
   const pieData = top10.map((coin, i) => ({
     value: coin.market_cap,
     name: coin.name,
     itemStyle: { color: COLORS[i] },
   }));
 
-  // 如果后 10 名有市值，追加一个灰色 "Others" 切片
   if (otherMarketCap > 0) {
     pieData.push({
       value: otherMarketCap,
       name: "Others",
-      itemStyle: { color: "#374151" }, // gray-700，视觉上后退
+      itemStyle: { color: "#374151" },
     });
   }
 
-  // ECharts 饼图配置
   const option = {
-    // 悬浮提示：显示名称 + 百分比
     tooltip: {
-      trigger: "item" as const, // 项触发：悬浮在切片上才弹出
+      trigger: "item" as const,
       backgroundColor: "#1f2937",
       borderColor: "#374151",
       textStyle: { color: "#e5e7eb" },
       formatter: (params: { name: string; percent: number }) =>
-        `${params.name}: ${params.percent.toFixed(1)}%`, // 如 "Bitcoin: 48.3%"
+        `${params.name}: ${params.percent.toFixed(1)}%`,
     },
-    // 图例：放在右侧，纵向排列
     legend: {
       orient: "vertical" as const,
       right: "0%",
@@ -82,7 +67,6 @@ export default function MarketPie({ coins, loading, error }: Props) {
       itemWidth: 10,
       itemHeight: 10,
     },
-    // 环形中心的文字
     graphic: {
       type: "text",
       left: "center",
@@ -94,19 +78,20 @@ export default function MarketPie({ coins, loading, error }: Props) {
         fontWeight: "bold",
       },
     },
-    // 饼图系列
     series: [
       {
         type: "pie",
-        radius: ["45%", "75%"], // 两个值 = 环形（第一个是内半径，第二个是外半径）
-        center: ["40%", "50%"], // 中心偏左，给右侧图例留空间
+        radius: ["45%", "75%"],
+        center: ["40%", "50%"],
         avoidLabelOverlap: false,
         itemStyle: {
-          borderColor: "#111827", // 切片间分隔线 = gray-950
+          borderColor: "#111827",
           borderWidth: 2,
         },
-        label: { show: false }, // 不在切片上直接显示标签
-        emphasis: { scaleSize: 8 }, // 鼠标悬停时切片放大量
+        label: { show: false },
+        emphasis: {
+          scaleSize: 8,
+        },
         data: pieData,
       },
     ],
