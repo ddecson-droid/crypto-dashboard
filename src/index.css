@@ -1,17 +1,7 @@
-/* ====== 全局样式入口 ======
-   Tailwind 的三层指令 + 暗色主题背景
-   这个文件原本是 Vite 模板的样式（一百多行），全部删掉换成了 Tailwind */
-
-/* 第一层：base —— 全局重置（去默认边距、统一盒模型、字体平滑等） */
 @tailwind base;
-
-/* 第二层：components —— 组件级别的样式（可以用 @apply 组合工具类） */
 @tailwind components;
-
-/* 第三层：utilities —— 工具类（flex、p-4、text-white 等，层次最高） */
 @tailwind utilities;
 
-/* 页面默认背景 + 文字颜色：全黑背景，白色文字 */
 body {
   @apply bg-gray-950 text-white;
 }
